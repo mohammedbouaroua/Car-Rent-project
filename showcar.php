@@ -1,6 +1,8 @@
 <?php
-// require 'checksession.php';
+require 'checksession.php';
 require 'dbconnection.php';
+require 'navbar.php';
+
 
 $id = $_GET['id'];
 

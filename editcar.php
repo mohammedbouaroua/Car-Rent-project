@@ -7,6 +7,7 @@
 // }
 
 require 'dbconnection.php';
+require 'navbar.php';
 
 $car_id = $_GET['id'];
 $query = "SELECT c.*, b.name as brand_name 
@@ -21,6 +22,7 @@ if(!$car) {
     exit();
 }
 ?>
+
 
 <html lang="en">
 <head>

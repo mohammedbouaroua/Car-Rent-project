@@ -1,6 +1,7 @@
 <?php
 // require 'checksession.php';
 require 'dbconnection.php';
+require 'navbar.php';
 
 // Recherche
 $search_brand = isset($_GET['brand']) ? $_GET['brand'] : '';

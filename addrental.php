@@ -1,6 +1,8 @@
 <?php
-// require 'checksession.php';
+require 'checksession.php';
 require 'dbconnection.php';
+require 'navbar.php';
+
 
 $car_id = isset($_GET['car_id']) ? $_GET['car_id'] : null;
 

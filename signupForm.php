@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Connexion</title>
+    <title>Inscription</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,7 +18,7 @@
             background: white;
             padding: 30px;
             border-radius: 10px;
-            width: 350px;
+            width: 400px;
         }
         h2 { text-align: center; }
         input {
@@ -27,6 +27,7 @@
             margin: 10px 0;
             border: 1px solid #ddd;
             border-radius: 5px;
+            box-sizing: border-box;
         }
         button {
             width: 100%;
@@ -45,47 +46,53 @@
             margin-bottom: 15px;
             text-align: center;
         }
-        .success {
-            background: #efe;
-            color: #3c3;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            text-align: center;
-        }
         a { color: #667eea; text-decoration: none; }
         .link { text-align: center; margin-top: 15px; }
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+        .row input {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>🔐 Connexion</h2>
+        <h2>📝 Inscription</h2>
         
-        <?php if(isset($_GET['auth'])): ?>
-            <?php switch($_GET['auth']):
-                case 'false': ?>
-                    <div class="error">❌ Email ou mot de passe incorrect</div>
+        <?php if(isset($_GET['error'])): ?>
+            <?php switch($_GET['error']):
+                case 'email_exists': ?>
+                    <div class="error">❌ Cet email existe déjà</div>
                     <?php break; ?>
-                <?php case 'nonAuth': ?>
-                    <div class="error">🔒 Veuillez vous connecter</div>
+                <?php case 'password_mismatch': ?>
+                    <div class="error">❌ Les mots de passe ne correspondent pas</div>
                     <?php break; ?>
-                <?php case 'again': ?>
-                    <div class="success">👋 Déconnexion réussie</div>
-                    <?php break; ?>
-                <?php case 'registered': ?>
-                    <div class="success">✅ Inscription réussie ! Connectez-vous</div>
+                <?php case 'empty': ?>
+                    <div class="error">❌ Veuillez remplir tous les champs</div>
                     <?php break; ?>
             <?php endswitch; ?>
         <?php endif; ?>
         
-        <form action="checkAuth.php" method="POST">
-            <input type="email" name="login" placeholder="Email" required>
-            <input type="password" name="pass" placeholder="Mot de passe" required>
-            <button type="submit">Se connecter</button>
+        <form action="checkSignup.php" method="POST">
+            <div class="row">
+                <input type="text" name="fullname" placeholder="Nom complet" required>
+                <input type="text" name="phone" placeholder="Téléphone">
+            </div>
+            
+            <input type="email" name="email" placeholder="Email" required>
+            
+            <div class="row">
+                <input type="password" name="password" placeholder="Mot de passe" required>
+                <input type="password" name="confirm_password" placeholder="Confirmer" required>
+            </div>
+            
+            <button type="submit">S'inscrire</button>
         </form>
         
         <div class="link">
-            <a href="signupForm.php">Créer un compte</a>
+            Déjà un compte ? <a href="authForm.php">Se connecter</a>
         </div>
     </div>
 </body>
