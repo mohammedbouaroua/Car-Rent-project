@@ -1,11 +1,22 @@
+
+<?php
+require 'checksession.php';
+
+if(!isset($_SESSION['role']) || $_SESSION['role'] != 'AD') {
+    header("Location: authForm.php?auth=access_denied");
+}
+
+include 'navbar.php';
+?>
 <!DOCTYPE html>
-<!--  -->
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter une voiture</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="cssfiles/addcar.css"/>
+
 </head>
 <body>
     <div class="form-container">

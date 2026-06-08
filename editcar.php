@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <?php
-// require 'checksession.php';
-// if($_SESSION['role'] != 'AD') {
-//     header('Location: authForm.php?auth=role');
-//     exit();
-// }
+require 'checksession.php';
+if($_SESSION['role'] != 'AD') {
+    header('Location: authForm.php?auth=access_denied');
+}
 
 require 'dbconnection.php';
-require 'navbar.php';
 
 $car_id = $_GET['id'];
 $query = "SELECT c.*, b.name as brand_name 
@@ -28,7 +26,7 @@ if(!$car) {
 <head>
     <meta charset="UTF-8">
     <title>Modifier la voiture</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="cssfiles/editcar.css"/>
 </head>
 <body>
     <div class="form-container">

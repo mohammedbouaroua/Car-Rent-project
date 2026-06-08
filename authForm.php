@@ -75,6 +75,9 @@
                 <?php case 'registered': ?>
                     <div class="success">✅ Inscription réussie ! Connectez-vous</div>
                     <?php break; ?>
+                <?php case 'access_denied': ?>
+                    <div class="error">⛔ Accès refusé. Connectez-vous en tant qu'administrateur.</div>
+                <?php break; ?>
             <?php endswitch; ?>
         <?php endif; ?>
         
