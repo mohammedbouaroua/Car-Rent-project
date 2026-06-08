@@ -13,7 +13,11 @@ if(mysqli_num_rows($result) == 1) {
     $_SESSION['user'] = $login;
     $_SESSION['role'] = $user['role'];
     $_SESSION['fullname'] = $user['fullname'];
-    header('Location: dashboard.php');
+    if($_SESSION['role'] == 'AD') {
+        header('Location: dashboard.php');
+    } else {
+        header('Location: allcars.php');
+    }
 } else {
     header('Location: authForm.php?auth=false');
 }
