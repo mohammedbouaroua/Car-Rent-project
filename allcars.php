@@ -27,87 +27,159 @@ if(!empty($search_status) && $search_status != 'all') {
 $query .= " ORDER BY c.brand_id, c.model";
 $result = mysqli_query($connection, $query);
 $totalCars = mysqli_num_rows($result);
+
+// Statistiques pour affichage
+$stats_query = "SELECT 
+    COUNT(CASE WHEN status = 'available' THEN 1 END) as available,
+    COUNT(CASE WHEN status = 'rented' THEN 1 END) as rented,
+    COUNT(CASE WHEN status = 'maintenance' THEN 1 END) as maintenance
+    FROM cars";
+$stats_result = mysqli_query($connection, $stats_query);
+$stats = mysqli_fetch_array($stats_result);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Gestion des voitures</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-    <style>
-        .car-card { border: 1px solid #ddd; margin: 10px; padding: 10px; display: inline-block; width: 300px; }
-        .car-card img { width: 100%; height: 200px; object-fit: cover; }
-        .available { color: green; font-weight: bold; }
-        .rented { color: orange; font-weight: bold; }
-        .maintenance { color: red; font-weight: bold; }
-    </style>
+    <title>Gestion des voitures - Car Rental</title>
+    <link rel="stylesheet" type="text/css" href="cssfiles/allcars.css"/>
 </head>
 <body>
-    <h2>Gestion des voitures</h2>
-    
-    <!-- Formulaire de recherche -->
-    <form method="GET" style="margin-bottom: 20px;">
-        <input type="text" name="brand" placeholder="Marque" value="<?php echo $search_brand; ?>">
-        <input type="text" name="model" placeholder="Modèle" value="<?php echo $search_model; ?>">
-        <select name="status">
-            <option value="all">Tous les statuts</option>
-            <option value="available" <?php echo $search_status=='available'?'selected':''; ?>>Disponible</option>
-            <option value="rented" <?php echo $search_status=='rented'?'selected':''; ?>>Louée</option>
-            <option value="maintenance" <?php echo $search_status=='maintenance'?'selected':''; ?>>Maintenance</option>
-        </select>
-        <input type="submit" value="Rechercher">
-        <a href="allcars.php"><button type="button">Réinitialiser</button></a>
-    </form>
-
-    <!-- <?php if($_SESSION['role'] == 'AD'): ?>
-                <a href="addcar.php" class="btn-add">+ Ajouter une voiture</a>
-    <?php endif; ?> -->
-    <?php if($totalCars > 0): ?>
-        <div class="cars-grid">
-            <?php while($car = mysqli_fetch_array($result)): ?>
-                <div class="car-card">
-                    <?php if($car['photo']): ?>
-                        <img src="<?php echo $car['photo']; ?>" alt="<?php echo $car['brand_name'] . ' ' . $car['model']; ?>">
-                    <?php else: ?>
-                        <img src="images/car-default.jpg" alt="No image">
-                    <?php endif; ?>
-                    
-                    <h3><?php echo $car['brand_name'] . ' ' . $car['model']; ?></h3>
-                    <p>Année: <?php echo $car['year']; ?></p>
-                    <p>Plaque: <?php echo $car['license_plate']; ?></p>
-                    <p>Prix: <?php echo $car['price_per_day']; ?> MAD/jour</p>
-                    <p>Places: <?php echo $car['seats']; ?></p>
-                    <p>Transmission: <?php echo $car['transmission'] == 'manual' ? 'Manuelle' : 'Automatique'; ?></p>
-                    <p class="<?php echo $car['status']; ?>">
-                        Statut: <?php 
-                            switch($car['status']) {
-                                case 'available': echo 'Disponible'; break;
-                                case 'rented': echo 'Louée'; break;
-                                case 'maintenance': echo 'En maintenance'; break;
-                            }
-                        ?>
-                    </p>
-                    
-                    <div class="actions">
-                        <a href="showcar.php?id=<?php echo $car['id']; ?>">👁️ Voir</a>
-                        <a href="editcar.php?id=<?php echo $car['id']; ?>">✏️ Modifier</a>
-                        <a href="deletecar.php?id=<?php echo $car['id']; ?>" onclick="return confirm('Supprimer cette voiture ?')">🗑️ Supprimer</a>
-                        <!-- <?php if($_SESSION['role'] == 'AD'): ?>
-                        <?php endif; ?> -->
-                        <?php if($car['status'] == 'available'): ?>
-                            <a href="addrental.php?car_id=<?php echo $car['id']; ?>" class="rent-btn">📍 Louer</a>
-                        <?php endif; ?>
+    <div class="cars-container">
+    <?php if($_SESSION['role'] == 'AD'): ?>
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2>🚗 Gestion des véhicules</h2>
+        </div>
+        
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-chip available">
+                <span class="count"><?php echo $stats['available']; ?></span>
+                <span class="label">Disponibles</span>
+            </div>
+            <div class="stat-chip rented">
+                <span class="count"><?php echo $stats['rented']; ?></span>
+                <span class="label">Louées</span>
+            </div>
+            <div class="stat-chip maintenance">
+                <span class="count"><?php echo $stats['maintenance']; ?></span>
+                <span class="label">Maintenance</span>
+            </div>
+        </div>
+    <?php endif; ?>
+        
+        <!-- Formulaire de recherche -->
+        <div class="search-form">
+            <form method="GET">
+                <div class="search-filters">
+                    <div class="filter-group">
+                        <label>🏭 Marque</label>
+                        <input type="text" name="brand" placeholder="Ex: Toyota, BMW..." value="<?php echo htmlspecialchars($search_brand); ?>">
+                    </div>
+                    <div class="filter-group">
+                        <label>🚙 Modèle</label>
+                        <input type="text" name="model" placeholder="Ex: Clio, Serie 3..." value="<?php echo htmlspecialchars($search_model); ?>">
+                    </div>
+                    <div class="filter-group">
+                        <label>📊 Statut</label>
+                        <select name="status">
+                            <option value="all">Tous</option>
+                            <option value="available" <?php echo $search_status=='available'?'selected':''; ?>>Disponible</option>
+                            <option value="rented" <?php echo $search_status=='rented'?'selected':''; ?>>Louée</option>
+                            <option value="maintenance" <?php echo $search_status=='maintenance'?'selected':''; ?>>Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="search-actions">
+                        <button type="submit" class="btn-search">🔍 Rechercher</button>
+                        <a href="allcars.php"><button type="button" class="btn-reset">⟳ Réinitialiser</button></a>
                     </div>
                 </div>
-            <?php endwhile; ?>
+            </form>
         </div>
-        <p>Total: <?php echo $totalCars; ?> voiture(s)</p>
-    <?php else: ?>
-        <p>Aucune voiture trouvée.</p>
-    <?php endif; ?>
-    
-    <a href="dashboard.php" class="back-btn">← Retour au tableau de bord</a>
+        
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <?php if($_SESSION['role'] == 'AD'): ?>
+                <a href="addcar.php" class="btn-add">➕ Ajouter une voiture</a>
+            <?php endif; ?>
+            <div class="total-count">
+                📊 <?php echo $totalCars; ?> véhicule(s) trouvé(s)
+            </div>
+        </div>
+        
+        <!-- Grille des voitures -->
+        <?php if($totalCars > 0): ?>
+            <div class="cars-grid">
+                <?php while($car = mysqli_fetch_array($result)): ?>
+                    <div class="car-card">
+                        <div class="car-image">
+                            <?php if($car['photo'] && file_exists($car['photo'])): ?>
+                                <img src="<?php echo $car['photo']; ?>" alt="<?php echo $car['brand_name'] . ' ' . $car['model']; ?>">
+                            <?php else: ?>
+                                <img src="photos/car-default.jpg" alt="No image">
+                            <?php endif; ?>
+                            <span class="car-status status-<?php echo $car['status']; ?>">
+                                <?php 
+                                    switch($car['status']) {
+                                        case 'available': echo '✓ Disponible'; break;
+                                        case 'rented': echo '📍 Louée'; break;
+                                        case 'maintenance': echo '🔧 Maintenance'; break;
+                                    }
+                                ?>
+                            </span>
+                        </div>
+                        <div class="car-info">
+                            <div class="car-title"><?php echo $car['brand_name'] . ' ' . $car['model']; ?></div>
+                            <div class="car-subtitle"><?php echo $car['year']; ?> • <?php echo $car['license_plate']; ?></div>
+                            
+                            <div class="car-details">
+                                <span class="detail-item">👥 <?php echo $car['seats']; ?> places</span>
+                                <span class="detail-item">⚙️ <?php echo $car['transmission'] == 'manual' ? 'Manuelle' : 'Automatique'; ?></span>
+                                <span class="detail-item">⛽ <?php 
+                                    switch($car['fuel_type']) {
+                                        case 'petrol': echo 'Essence'; break;
+                                        case 'diesel': echo 'Diesel'; break;
+                                        case 'electric': echo 'Électrique'; break;
+                                        case 'hybrid': echo 'Hybride'; break;
+                                    }
+                                ?></span>
+                            </div>
+                            
+                            <div class="car-price">
+                                <span class="price-value"><?php echo number_format($car['price_per_day'], 0, ',', ' '); ?> MAD</span>
+                                <span class="price-unit">/jour</span>
+                            </div>
+                            
+                            <div class="car-actions">
+                                <a href="showcar.php?id=<?php echo $car['id']; ?>" class="btn-view">👁️ Voir</a>
+                                <?php if($_SESSION['role'] == 'AD'): ?>
+                                    <a href="editcar.php?id=<?php echo $car['id']; ?>" class="btn-edit">✏️ Modifier</a>
+                                    <a href="deletecar.php?id=<?php echo $car['id']; ?>" class="btn-delete" onclick="return confirm('Supprimer cette voiture ?')">🗑️ Supprimer</a>
+                                <?php endif; ?>
+                                <?php if($car['status'] == 'available'): ?>
+                                    <a href="addrental.php?car_id=<?php echo $car['id']; ?>" class="btn-rent">📍 Louer</a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+            <?php if($_SESSION['role'] == 'AD'): ?>
+            <a href="dashboard.php" class="back-btn">← Retour au tableau de bord</a>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class="empty-state">
+                <div class="empty-icon">🚗🔍</div>
+                <h3>Aucune voiture trouvée</h3>
+                <?php if($_SESSION['role'] == 'AD'): ?>
+                    <a href="addcar.php" class="btn-add" style="margin-top: 15px;">➕ Ajouter une voiture</a>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+        
+    </div>
 </body>
 </html>
 
