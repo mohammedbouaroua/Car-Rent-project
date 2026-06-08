@@ -18,71 +18,15 @@ if(!$car) {
     exit();
 }
 
-// // Vérifier si la voiture est actuellement louée
-// $rental_query = "SELECT r.*, cu.firstname, cu.lastname, cu.phone 
-//                  FROM rentals r 
-//                  JOIN customers cu ON r.customer_id = cu.id 
-//                  WHERE r.car_id = $id 
-//                  AND r.status IN ('pending', 'active')
-//                  ORDER BY r.created_at DESC LIMIT 1";
-// $rental_result = mysqli_query($connection, $rental_query);
-// $current_rental = mysqli_fetch_array($rental_result);
-// ?>
+?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Détails de la voiture</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-    <style>
-        .car-detail {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .car-detail img {
-            max-width: 100%;
-            border-radius: 10px;
-        }
-        .info-row {
-            margin: 15px 0;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        .info-label {
-            font-weight: bold;
-            width: 200px;
-            display: inline-block;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .status-available { background: #d4edda; color: #155724; }
-        .status-rented { background: #fff3cd; color: #856404; }
-        .status-maintenance { background: #f8d7da; color: #721c24; }
-        .action-buttons {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 5px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .btn-primary { background: #007bff; color: white; }
-        .btn-warning { background: #ffc107; color: #212529; }
-        .btn-danger { background: #dc3545; color: white; }
-        .btn-secondary { background: #6c757d; color: white; }
-    </style>
+    <link rel="stylesheet" type="text/css" href="cssfiles/showcar.css"/>
+    
 </head>
 <body>
     <div class="car-detail">

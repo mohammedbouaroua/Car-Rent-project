@@ -23,27 +23,17 @@ if($car_id) {
 <head>
     <meta charset="UTF-8">
     <title>Nouvelle location</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="cssfiles/addrental.css"/>
     <style>
-        .form-container { max-width: 600px; margin: 20px auto; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-        .car-info {
-            background: #e8f4f8;
-            padding: 15px;
+     .error {
+            background: #fee;
+            color: #c33;
+            padding: 10px;
             border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .total-price {
-            font-size: 24px;
-            color: #28a745;
-            font-weight: bold;
+            margin-bottom: 15px;
             text-align: center;
-            margin-top: 20px;
         }
-        .btn-submit { background: #28a745; color: white; padding: 12px; font-size: 18px; }
-        .error { color: red; font-size: 14px; margin-top: 5px; }
+    
     </style>
     <script>
         function calculateTotal() {
@@ -70,7 +60,16 @@ if($car_id) {
 <body>
     <div class="form-container">
         <h2>Nouvelle location</h2>
-        
+        <?php if(isset($_GET['error'])): ?>
+            <?php switch($_GET['error']):
+                case 'customer_not_found': ?>
+                    <div class="error">❌ Client non trouvé</div>
+                    <?php break; ?>
+                <?php case 'customer_insert_failed': ?>
+                    <div class="error">❌ Échec de l'insertion du client</div>
+                    <?php break; ?>
+            <?php endswitch; ?>
+        <?php endif; ?>
         <?php if($car): ?>
         <div class="car-info">
             <h3>Voiture sélectionnée</h3>

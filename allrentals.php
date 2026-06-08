@@ -46,6 +46,25 @@ $total_rentals = mysqli_num_rows($result);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des locations - Car Rental</title>
     <link rel="stylesheet" href="cssfiles/allrentals.css">
+    <style>.btn-cancel {
+    background: #e74c3c;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: #c0392b;
+    transform: scale(1.05);
+}
+
+.no-action {
+    color: #999;
+    font-size: 14px;
+}</style>
 </head>
 <body>
     <div class="container">
@@ -54,7 +73,9 @@ $total_rentals = mysqli_num_rows($result);
         <div class="page-header">
             <h2>📋 Gestion des locations</h2>
         </div>
-        
+          <?php if(isset($_GET['success'])): ?>
+            <div class="success">✅ Location ajoutée avec succès</div>
+          <?php endif; ?>
         <!-- Filter Bar -->
         <div class="filter-bar">
             <form method="GET" class="filter-form">
@@ -66,8 +87,6 @@ $total_rentals = mysqli_num_rows($result);
                     <label>📊 Statut</label>
                     <select name="status">
                         <option value="all" <?php echo $status_filter == 'all' ? 'selected' : ''; ?>>Tous</option>
-                        <option value="pending" <?php echo $status_filter == 'pending' ? 'selected' : ''; ?>>En attente</option>
-                        <option value="confirmed" <?php echo $status_filter == 'confirmed' ? 'selected' : ''; ?>>Confirmée</option>
                         <option value="active" <?php echo $status_filter == 'active' ? 'selected' : ''; ?>>Active</option>
                         <option value="completed" <?php echo $status_filter == 'completed' ? 'selected' : ''; ?>>Terminée</option>
                         <option value="cancelled" <?php echo $status_filter == 'cancelled' ? 'selected' : ''; ?>>Annulée</option>
@@ -94,6 +113,7 @@ $total_rentals = mysqli_num_rows($result);
                             <th>Date fin</th>
                             <th>Total</th>
                             <th>Statut</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -115,8 +135,6 @@ $total_rentals = mysqli_num_rows($result);
                                 <span class="status-badge status-<?php echo $rental['status']; ?>">
                                     <?php 
                                         switch($rental['status']) {
-                                            case 'pending': echo '⏳ En attente'; break;
-                                            case 'confirmed': echo '✅ Confirmée'; break;
                                             case 'active': echo '🚗 Active'; break;
                                             case 'completed': echo '✔️ Terminée'; break;
                                             case 'cancelled': echo '❌ Annulée'; break;
@@ -124,6 +142,17 @@ $total_rentals = mysqli_num_rows($result);
                                         }
                                     ?>
                                 </span>
+                            </td>
+                            <td>
+                                <?php if($rental['status'] == 'active'): ?>
+                                    <a href="cancel_rental.php?id=<?php echo $rental['id']; ?>"
+                                       onclick="return confirm('Annuler cette location ?');"
+                                       class="btn-cancel">
+                                       ❌ Cancel
+                                    </a>
+                                <?php else: ?>
+                                    <span class="no-action">—</span>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php endwhile; ?>

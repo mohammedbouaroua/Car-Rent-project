@@ -52,6 +52,7 @@
         .stat-chip.rented { border-left: 4px solid #ffc107; }
         .stat-chip.maintenance { border-left: 4px solid #dc3545; }
         
+        
         /* Formulaire de recherche */
         .search-form {
             background: white;

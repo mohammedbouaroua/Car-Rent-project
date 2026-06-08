@@ -1,10 +1,11 @@
 <?php
 require 'checksession.php';
+require 'dbconnection.php';
+require 'editstatusrentals.php'; // Met à jour les statuts des locations et des voitures avant d'afficher la liste
 
 if(!isset($_SESSION['role']) || $_SESSION['role'] != 'AD') {
     header("Location: authForm.php?auth=access_denied");
 }
-require 'dbconnection.php';
 require 'navbar.php';
 
 
@@ -171,10 +172,7 @@ $stats['revenue_today'] = mysqli_fetch_array($result)['total'] ?? 0;
                     <span class="action-icon">➕</span>
                     <span>Ajouter une voiture</span>
                 </a>
-                <a href="addrental.php" class="quick-action-btn">
-                    <span class="action-icon">📍</span>
-                    <span>Nouvelle location</span>
-                </a>
+
                 <a href="allcars.php" class="quick-action-btn">
                     <span class="action-icon">🚗</span>
                     <span>Gérer les véhicules</span>
@@ -183,12 +181,6 @@ $stats['revenue_today'] = mysqli_fetch_array($result)['total'] ?? 0;
                     <span class="action-icon">📋</span>
                     <span>Gérer les locations</span>
                 </a>
-                <?php if($_SESSION['role'] == 'AD'): ?>
-                    <a href="users.php" class="quick-action-btn">
-                        <span class="action-icon">👥</span>
-                        <span>Gérer les utilisateurs</span>
-                    </a>
-                <?php endif; ?>
             </div>
         </div>
         

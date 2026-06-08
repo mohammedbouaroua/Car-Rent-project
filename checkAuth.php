@@ -11,6 +11,7 @@ $result = mysqli_query($connection, $query);
 if(mysqli_num_rows($result) == 1) {
     $user = mysqli_fetch_array($result);
     $_SESSION['user'] = $login;
+    $_SESSION['user_id'] = $user['id'];
     $_SESSION['role'] = $user['role'];
     $_SESSION['fullname'] = $user['fullname'];
     if($_SESSION['role'] == 'AD') {

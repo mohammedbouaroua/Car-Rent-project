@@ -1,8 +1,9 @@
 <?php
-// require 'checksession.php';
+require 'checksession.php';
 require 'dbconnection.php';
 
-$car_id = $_POST['car_id'];
+$car_id = intval($_POST['car_id']);
+$user_id = $_SESSION['user_id'];
 $start_date = $_POST['start_date'];
 $end_date = $_POST['end_date'];
 $total_price = $_POST['total_price'];
@@ -22,15 +23,16 @@ if($customer_type == 'existing') {
     $customer = mysqli_fetch_array($customer_result);
     $customer_id = $customer['id'];
 } else {
-    $firstname = mysqli_real_escape_string($connection, $_POST['firstname']);
-    $lastname = mysqli_real_escape_string($connection, $_POST['lastname']);
-    $email = mysqli_real_escape_string($connection, $_POST['email']);
-    $phone = mysqli_real_escape_string($connection, $_POST['phone']);
-    $address = mysqli_real_escape_string($connection, $_POST['address']);
-    $driver_license = mysqli_real_escape_string($connection, $_POST['driver_license']);
-    
-    $insert_customer = "INSERT INTO customers (firstname, lastname, email, phone, address, driver_license) 
-                        VALUES ('$firstname', '$lastname', '$email', '$phone', '$address', '$driver_license')";
+      $firstname = $_POST['firstname'];
+    $lastname = $_POST['lastname'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $address = $_POST['address'];
+    $driver_license = $_POST['driver_license'];
+
+
+    $insert_customer = "INSERT INTO customers (user_id, firstname, lastname, email, phone, address, driver_license) 
+                        VALUES ('$user_id', '$firstname', '$lastname', '$email', '$phone', '$address', '$driver_license')";
     
     if(mysqli_query($connection, $insert_customer)) {
         $customer_id = mysqli_insert_id($connection);
@@ -40,18 +42,23 @@ if($customer_type == 'existing') {
     }
 }
 
+
+
 // Créer la location
 $rental_query = "INSERT INTO rentals (car_id, customer_id, start_date, end_date, total_price, status) 
-                 VALUES ('$car_id', '$customer_id', '$start_date', '$end_date', '$total_price', 'confirmed')";
+                 VALUES ('$car_id', '$customer_id', '$start_date', '$end_date', '$total_price', 'active')";
 
 if(mysqli_query($connection, $rental_query)) {
     // Mettre à jour le statut de la voiture
-    $update_car = "UPDATE cars SET status = 'rented' WHERE id = $car_id";
-    mysqli_query($connection, $update_car);
+$update_car = "UPDATE cars SET status = 'rented' WHERE id = $car_id AND '$end_date' >= CURDATE()";    mysqli_query($connection, $update_car);
     
     mysqli_close($connection);
-    header('Location: allrentals.php?success=added');
+    if ($_SESSION['role'] == 'AD') {
+        header('Location: allrentals.php?success=added');
+    } else {
+        header('Location: allcars.php?success=added');
+    }
 } else {
     echo "Erreur : " . mysqli_error($connection);
 }
-?>
+

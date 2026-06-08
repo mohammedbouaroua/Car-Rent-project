@@ -1,7 +1,9 @@
 <?php
-// require 'checksession.php';
+require 'checksession.php';
 require 'dbconnection.php';
 require 'navbar.php';
+require 'editstatusrentals.php'; // Met à jour les statuts des locations et des voitures avant d'afficher la liste
+
 
 // Recherche
 $search_brand = isset($_GET['brand']) ? $_GET['brand'] : '';
@@ -44,6 +46,16 @@ $stats = mysqli_fetch_array($stats_result);
     <meta charset="UTF-8">
     <title>Gestion des voitures - Car Rental</title>
     <link rel="stylesheet" type="text/css" href="cssfiles/allcars.css"/>
+   <style>
+        .success {
+            background: #e0f8e9;
+            color: #2d7a46;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <div class="cars-container">
@@ -52,7 +64,6 @@ $stats = mysqli_fetch_array($stats_result);
         <div class="page-header">
             <h2>🚗 Gestion des véhicules</h2>
         </div>
-        
         <!-- Stats Bar -->
         <div class="stats-bar">
             <div class="stat-chip available">
@@ -69,7 +80,9 @@ $stats = mysqli_fetch_array($stats_result);
             </div>
         </div>
     <?php endif; ?>
-        
+        <?php if(isset($_GET['success'])): ?>
+            <div class="success">✅ Location ajoutée avec succès</div>
+        <?php endif; ?>
         <!-- Formulaire de recherche -->
         <div class="search-form">
             <form method="GET">
