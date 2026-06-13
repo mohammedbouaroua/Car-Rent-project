@@ -1,73 +1,75 @@
 <?php
-// navbar.php - Barre de navigation principale
+require_once 'icon_helper.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 if (!isset($_SESSION['user'])) {
-    header("Location: authForm.php?auth=nonAuth");
+    header('Location: authForm.php?auth=nonAuth');
     exit();
 }
 
 $fullname = $_SESSION['fullname'] ?? $_SESSION['user'];
 $role = $_SESSION['role'] ?? 'US';
 $isAdmin = ($role === 'AD');
+$currentPage = basename($_SERVER['PHP_SELF'] ?? '');
+
+function navbar_link_class($currentPage, $pages)
+{
+    return in_array($currentPage, (array) $pages, true) ? 'navbar-link active' : 'navbar-link';
+}
 ?>
 
 <link rel="stylesheet" href="cssfiles/navbar.css">
 
 <nav class="navbar">
     <div class="navbar-container">
-
-        <!-- Logo -->
         <a href="dashboard.php" class="navbar-logo">
-            🚗 Location de voitures
+            <?= ui_icon('car') ?> Location de voitures
         </a>
 
-        <!-- Mobile -->
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        <button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Ouvrir le menu">
+            <?= ui_icon('bars-3') ?>
+        </button>
 
-        <!-- Menu -->
         <div class="navbar-menu" id="navbarMenu">
             <?php if ($isAdmin): ?>
-
-            <a href="dashboard.php" class="navbar-link">
-                📊 Tableau de bord
-            </a>
+                <a href="dashboard.php" class="<?= navbar_link_class($currentPage, ['dashboard.php']) ?>">
+                    <?= ui_icon('chart-bar') ?> Tableau de bord
+                </a>
             <?php endif; ?>
 
-            <!-- Voitures -->
             <div class="navbar-item dropdown">
-                <a href="#" class="navbar-link">🚗 Voitures ▼</a>
+                <a href="#" class="<?= navbar_link_class($currentPage, ['allcars.php', 'addcar.php', 'editcar.php', 'showcar.php']) ?>">
+                    <?= ui_icon('car') ?> Voitures <?= ui_icon('chevron-down') ?>
+                </a>
                 <div class="dropdown-menu">
-                    <a href="allcars.php">📋 Toutes les voitures</a>
-
+                    <a href="allcars.php"><?= ui_icon('clipboard') ?> Toutes les voitures</a>
                     <?php if ($isAdmin): ?>
-                        <a href="addcar.php">➕ Ajouter une voiture</a>
+                        <a href="addcar.php"><?= ui_icon('add') ?> Ajouter une voiture</a>
                     <?php endif; ?>
                 </div>
             </div>
 
-            <!-- Locations -->
-            <div class="navbar-item dropdown">
-                <?php if ($isAdmin):{ ?>
-                <a href="#" class="navbar-link">📅 Locations ▼</a>
-                <div class="dropdown-menu">
-                    <a href="allrentals.php">📋 Toutes les locations</a>
+            <?php if ($isAdmin): ?>
+                <div class="navbar-item dropdown">
+                    <a href="#" class="<?= navbar_link_class($currentPage, ['allrentals.php', 'addrental.php']) ?>">
+                        <?= ui_icon('calendar') ?> Locations <?= ui_icon('chevron-down') ?>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="allrentals.php"><?= ui_icon('clipboard') ?> Toutes les locations</a>
+                    </div>
                 </div>
-                <?php }endif; ?>
-            </div>
+            <?php endif; ?>
 
-            <!-- User -->
-            <span class="navbar-link" style="cursor: default;">
-                👤 <?= htmlspecialchars($fullname . ' - ' . ($isAdmin ? 'Administrateur' : 'Utilisateur')) ?>
+            <span class="navbar-link navbar-user-badge">
+                <?= ui_icon('user') ?> <?= htmlspecialchars($fullname . ' - ' . ($isAdmin ? 'Administrateur' : 'Utilisateur'), ENT_QUOTES, 'UTF-8') ?>
             </span>
 
             <a href="logout.php" class="navbar-link logout-link">
-                🚪 Déconnexion
+                <?= ui_icon('logout') ?> Deconnexion
             </a>
-
         </div>
     </div>
 </nav>

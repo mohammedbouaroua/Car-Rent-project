@@ -1,47 +1,145 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f8fafc;
+    margin: 0;
+    color: #1e293b;
+}
 
-        .car-detail {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .car-detail img {
-            max-width: 100%;
-            border-radius: 10px;
-        }
-        .info-row {
-            margin: 15px 0;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        .info-label {
-            font-weight: bold;
-            width: 200px;
-            display: inline-block;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .status-available { background: #d4edda; color: #155724; }
-        .status-rented { background: #fff3cd; color: #856404; }
-        .status-maintenance { background: #f8d7da; color: #721c24; }
-        .action-buttons {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 5px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .btn-primary { background: #007bff; color: white; }
-        .btn-warning { background: #ffc107; color: #212529; }
-        .btn-danger { background: #dc3545; color: white; }
-        .btn-secondary { background: #6c757d; color: white; }
+.car-detail {
+    max-width: 1180px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+.car-detail-grid {
+    display: grid;
+    grid-template-columns: minmax(340px, 1fr) minmax(380px, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.car-image-panel h2 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.car-image-panel img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #f1f5f9;
+}
+
+.status-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.status-badge,
+.price-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.price-chip {
+    background: #eef2ff;
+    color: #4338ca;
+}
+
+.info-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.info-label {
+    font-weight: bold;
+    color: #475569;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-value {
+    color: #1e293b;
+}
+
+.status-available {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-rented {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-maintenance {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.description-row {
+    align-items: start;
+}
+
+.description-text {
+    line-height: 1.6;
+}
+
+.action-buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+@media (max-width: 900px) {
+    .car-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .car-image-panel img {
+        height: auto;
+        max-height: 420px;
+    }
+
+    .info-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}

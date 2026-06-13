@@ -1,51 +1,21 @@
-body {
-            font-family: Arial, sans-serif;
-            background: #667eea;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 400px;
-        }
-        h2 { text-align: center; }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .error {
-            background: #fee;
-            color: #c33;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        a { color: #667eea; text-decoration: none; }
-        .link { text-align: center; margin-top: 15px; }
-        .row {
-            display: flex;
-            gap: 10px;
-        }
-        .row input {
-            flex: 1;
-        }
+@import url('authForm.css');
+
+.container {
+    width: min(520px, 100%);
+}
+
+.row {
+    display: flex;
+    gap: 12px;
+}
+
+.row > * {
+    flex: 1;
+}
+
+@media (max-width: 560px) {
+    .row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
