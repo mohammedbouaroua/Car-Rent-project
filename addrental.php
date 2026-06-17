@@ -25,17 +25,7 @@ if ($car_id) {
     <title>Nouvelle location</title>
     <link rel="stylesheet" type="text/css" href="cssfiles/addrental.css"/>
     <style>
-        .error {
-            background: #fee;
-            color: #c33;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            text-align: center;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
+
     </style>
     <script>
         function calculateTotal() {

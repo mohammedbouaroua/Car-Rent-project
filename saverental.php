@@ -50,7 +50,8 @@ $rental_query = "INSERT INTO rentals (car_id, customer_id, start_date, end_date,
 
 if(mysqli_query($connection, $rental_query)) {
     // Mettre à jour le statut de la voiture
-$update_car = "UPDATE cars SET status = 'rented' WHERE id = $car_id AND '$end_date' >= CURDATE()";    mysqli_query($connection, $update_car);
+$update_car = "UPDATE cars SET status = 'rented' WHERE id = $car_id";    
+mysqli_query($connection, $update_car);
     
     mysqli_close($connection);
     if ($_SESSION['role'] == 'AD') {

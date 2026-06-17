@@ -1,5 +1,7 @@
 <?php
-require 'checksession.php';
+if(isset ($_SESSION['user'])){
+    require 'checksession.php';
+}
 require 'dbconnection.php';
 require 'navbar.php';
 require 'editstatusrentals.php';
@@ -42,12 +44,13 @@ $stats = mysqli_fetch_array($stats_result);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des voitures - Car Rental</title>
+    <title>Location de voitures</title>
     <link rel="stylesheet" type="text/css" href="cssfiles/allcars.css"/>
 </head>
 <body>
     <div class="cars-container">
-        <?php if ($_SESSION['role'] == 'AD'): ?>
+    
+        <?php if(isset($_SESSION['user']) && $_SESSION['role'] == 'AD'){ ?>
             <div class="page-header">
                 <h2><?= ui_icon('car') ?> Gestion des vehicules</h2>
             </div>
@@ -66,12 +69,12 @@ $stats = mysqli_fetch_array($stats_result);
                     <span class="label">Maintenance</span>
                 </div>
             </div>
-        <?php endif; ?>
+        <?php } ?>
 
-        <?php if (isset($_GET['success'])): ?>
+        <?php if (isset($_GET['success'])){ ?>
             <div class="success"><?= ui_icon('check-circle') ?> Location ajoutee avec succes</div>
-        <?php endif; ?>
-
+        <?php }?>
+                <!-- Formulaire de recherche -->
         <div class="search-form">
             <form method="GET">
                 <div class="search-filters">
@@ -101,7 +104,7 @@ $stats = mysqli_fetch_array($stats_result);
         </div>
 
         <div class="action-bar">
-            <?php if ($_SESSION['role'] == 'AD'): ?>
+            <?php if (isset($_SESSION['user']) &&  $_SESSION['role'] == 'AD'): ?>
                 <a href="addcar.php" class="btn-add"><?= ui_icon('add') ?> Ajouter une voiture</a>
             <?php endif; ?>
             <div class="total-count">
@@ -114,11 +117,11 @@ $stats = mysqli_fetch_array($stats_result);
                 <?php while ($car = mysqli_fetch_array($result)): ?>
                     <div class="car-card">
                         <div class="car-image">
-                            <?php if ($car['photo'] && file_exists($car['photo'])): ?>
+                            <?php if ($car['photo'] && file_exists($car['photo'])){ ?>
                                 <img src="<?= htmlspecialchars($car['photo'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($car['brand_name'] . ' ' . $car['model'], ENT_QUOTES, 'UTF-8') ?>">
-                            <?php else: ?>
+                            <?php }else{ ?>
                                 <img src="photos/car-default.jpg" alt="No image">
-                            <?php endif; ?>
+                            <?php }; ?>
                             <span class="car-status status-<?= $car['status'] ?>">
                                 <?php
                                 switch ($car['status']) {
@@ -169,7 +172,7 @@ $stats = mysqli_fetch_array($stats_result);
 
                             <div class="car-actions">
                                 <a href="showcar.php?id=<?= $car['id'] ?>" class="btn-view"><?= ui_icon('view') ?> Voir</a>
-                                <?php if ($_SESSION['role'] == 'AD'): ?>
+                                <?php if (isset($_SESSION['user']) && $_SESSION['role'] == 'AD'): ?>
                                     <a href="editcar.php?id=<?= $car['id'] ?>" class="btn-edit"><?= ui_icon('edit') ?> Modifier</a>
                                     <a href="deletecar.php?id=<?= $car['id'] ?>" class="btn-delete" onclick="return confirm('Supprimer cette voiture ?')"><?= ui_icon('trash') ?> Supprimer</a>
                                 <?php endif; ?>
@@ -182,14 +185,14 @@ $stats = mysqli_fetch_array($stats_result);
                 <?php endwhile; ?>
             </div>
 
-            <?php if ($_SESSION['role'] == 'AD'): ?>
+            <?php if (isset($_SESSION['user']) && $_SESSION['role'] == 'AD'): ?>
                 <a href="dashboard.php" class="back-btn"><?= ui_icon('arrow-left') ?> Retour au tableau de bord</a>
             <?php endif; ?>
         <?php else: ?>
             <div class="empty-state">
                 <div class="empty-icon"><?= ui_icon('car-search') ?></div>
                 <h3>Aucune voiture trouvee</h3>
-                <?php if ($_SESSION['role'] == 'AD'): ?>
+                <?php if ( isset($_SESSION['user']) && $_SESSION['role'] == 'AD'): ?>
                     <a href="addcar.php" class="btn-add" style="margin-top: 15px;"><?= ui_icon('add') ?> Ajouter une voiture</a>
                 <?php endif; ?>
             </div>

@@ -132,6 +132,17 @@ select {
     background: #475569;
     transform: translateY(-2px);
 }
+.error {
+    background: #fee;
+    color: #c33;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
 
 @keyframes fadeIn {
     from {

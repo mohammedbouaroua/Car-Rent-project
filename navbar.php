@@ -5,16 +5,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (!isset($_SESSION['user'])) {
-    header('Location: authForm.php?auth=nonAuth');
-    exit();
+if (isset($_SESSION['user'])) {
+    $fullname = $_SESSION['fullname'] ?? $_SESSION['user'];
+    $role = $_SESSION['role'] ?? 'US';
+    $isAdmin = ($role === 'AD');
+    $currentPage = basename($_SERVER['PHP_SELF'] ?? '');
 }
-
-$fullname = $_SESSION['fullname'] ?? $_SESSION['user'];
-$role = $_SESSION['role'] ?? 'US';
-$isAdmin = ($role === 'AD');
-$currentPage = basename($_SERVER['PHP_SELF'] ?? '');
-
 function navbar_link_class($currentPage, $pages)
 {
     return in_array($currentPage, (array) $pages, true) ? 'navbar-link active' : 'navbar-link';
@@ -25,14 +21,25 @@ function navbar_link_class($currentPage, $pages)
 
 <nav class="navbar">
     <div class="navbar-container">
-        <a href="dashboard.php" class="navbar-logo">
-            <?= ui_icon('car') ?> Location de voitures
-        </a>
-
+        <?php
+        if (isset($_SESSION['user'])) {
+        ?>
+            <a href="dashboard.php" class="navbar-logo">
+                <?= ui_icon('car') ?> Location de voitures
+            </a>
+        <?php
+        }else {
+        ?>
+            <a href="allcars.php" class="navbar-logo">
+                <?= ui_icon('car') ?> Location de voitures
+            </a>
+        <?php
+        }
+        ?>
         <button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Ouvrir le menu">
             <?= ui_icon('bars-3') ?>
         </button>
-
+       <?php if (isset($_SESSION['user'])) { ?>
         <div class="navbar-menu" id="navbarMenu">
             <?php if ($isAdmin): ?>
                 <a href="dashboard.php" class="<?= navbar_link_class($currentPage, ['dashboard.php']) ?>">
@@ -71,6 +78,17 @@ function navbar_link_class($currentPage, $pages)
                 <?= ui_icon('logout') ?> Deconnexion
             </a>
         </div>
+        <?php } else { ?>
+            <div class="navbar-menu" id="navbarMenu">
+                <a href="authForm.php" class="navbar-link login-link">
+                    <?= ui_icon('login') ?> Connexion
+                </a>
+                <p> / </p>
+                <a href="signupForm.php" class="navbar-link login-link">
+                Inscription
+                </a>
+            </div>
+        <?php } ?>
     </div>
 </nav>
 
