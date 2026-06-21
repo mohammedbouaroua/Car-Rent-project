@@ -2,15 +2,21 @@
 if(isset ($_SESSION['user'])){
     require 'checksession.php';
 }
+// Connexion à la base de données
 require 'dbconnection.php';
+// Barre de navigation
 require 'navbar.php';
+// Mise à jour automatique du statut des locations (si utilisé)
 require 'editstatusrentals.php';
+// Helper pour les icônes UI
 require_once 'icon_helper.php';
 
+// RÉCUPÉRATION DES FILTRES DE RECHERCHE
 $search_brand = isset($_GET['brand']) ? $_GET['brand'] : '';
 $search_model = isset($_GET['model']) ? $_GET['model'] : '';
 $search_status = isset($_GET['status']) ? $_GET['status'] : '';
 
+//  REQUÊTE PRINCIPALE DES VOITURES
 $query = "SELECT c.*, b.name as brand_name
           FROM cars c
           LEFT JOIN brands b ON c.brand_id = b.id
@@ -30,6 +36,7 @@ $query .= " ORDER BY c.brand_id, c.model";
 $result = mysqli_query($connection, $query);
 $totalCars = mysqli_num_rows($result);
 
+// STATISTIQUES DES VOITURES
 $stats_query = "SELECT
     COUNT(CASE WHEN status = 'available' THEN 1 END) as available,
     COUNT(CASE WHEN status = 'rented' THEN 1 END) as rented,

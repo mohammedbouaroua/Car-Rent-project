@@ -47,7 +47,7 @@ include 'navbar.php';
 
             <div class="form-group">
                 <label for="year" class="required">Annee</label>
-                <input type="number" id="year" name="year" required min="1990" max="<?php echo date('Y') + 1; ?>" placeholder="Ex: 2022">
+                <input type="number" id="year" name="year" required min="1990" max="<?php echo date('Y'); ?>" placeholder="Ex: 2022">
             </div>
 
             <div class="form-group">
